@@ -14,23 +14,26 @@ add_custom_command(OUTPUT DIP.o
         POST_BUILD
         COMMAND ${BUDDY_BINARY_DIR}/buddy-opt ${CMAKE_CURRENT_SOURCE_DIR}/DIP.mlir
         -lower-dip="DIP-strip-mining=${SPLITING_SIZE}"
+        -async-parallel-for
+        -async-to-async-runtime
+        -async-runtime-ref-counting
+        -async-runtime-ref-counting-opt
         -arith-expand
         -lower-affine
-        -convert-scf-to-openmp
         -convert-async-to-llvm
         -convert-memref-to-llvm
         -convert-scf-to-cf
-        -convert-openmp-to-llvm
         -convert-math-to-llvm
         -convert-vector-to-llvm
         -convert-func-to-llvm
         -reconcile-unrealized-casts |
         ${LLVM_MLIR_BINARY_DIR}/mlir-translate --mlir-to-llvmir |
-        ${LLVM_MLIR_BINARY_DIR}/llc
-        -mtriple=${BUDDY_TARGET_TRIPLE}
-        -mattr=${BUDDY_OPT_ATTR}
-        --filetype=obj
-        -o ${CMAKE_CURRENT_BINARY_DIR}/DIP.o
+        ${LLVM_MLIR_BINARY_DIR}/llvm-as -o ${CMAKE_CURRENT_BINARY_DIR}/DIP.bc
+        COMMAND ${LLVM_MLIR_BINARY_DIR}/clang++
+        ${CMAKE_CURRENT_BINARY_DIR}/DIP.bc -c -o
+        ${CMAKE_CURRENT_BINARY_DIR}/DIP.o
+        COMMAND rm ${CMAKE_CURRENT_BINARY_DIR}/DIP.bc
+        DEPENDS buddy-opt
         )
 
 add_library(BuddyLibDIP STATIC DIP.o)

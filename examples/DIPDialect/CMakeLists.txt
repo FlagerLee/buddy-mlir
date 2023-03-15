@@ -8,13 +8,13 @@ set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fopenmp")
 set(CMAKE_CXX_COMPILER ${LLVM_MLIR_BINARY_DIR}/clang++)
 
 add_executable(correlation2D correlation2D.cpp)
-target_link_libraries(correlation2D ${OpenCV_LIBS} BuddyLibDIP)
+target_link_libraries(correlation2D ${OpenCV_LIBS} BuddyLibDIP static_mlir_async_runtime)
 
 add_executable(rotation2D rotation2D.cpp)
-target_link_libraries(rotation2D ${OpenCV_LIBS} BuddyLibDIP)
+target_link_libraries(rotation2D ${OpenCV_LIBS} BuddyLibDIP static_mlir_async_runtime)
 
 add_executable(resize2D resize2D.cpp)
-target_link_libraries(resize2D ${OpenCV_LIBS} BuddyLibDIP)
+target_link_libraries(resize2D ${OpenCV_LIBS} BuddyLibDIP static_mlir_async_runtime)
 
 add_executable(morph2D morph2D.cpp)
-target_link_libraries(morph2D ${OpenCV_LIBS} BuddyLibDIP)
+target_link_libraries(morph2D ${OpenCV_LIBS} BuddyLibDIP static_mlir_async_runtime)
