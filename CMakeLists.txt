@@ -116,6 +116,19 @@ if(BUDDY_DSL_EXAMPLES)
     # add macros to generate ANTLR Cpp code from grammar
     find_package(ANTLR REQUIRED)
 endif()
+
+#-------------------------------------------------------------------------------
+# OpenMP setup
+#-------------------------------------------------------------------------------
+
+find_library(OPENMP_LIB omp PATHS ${LLVM_MLIR_BINARY_DIR}/../lib)
+
+if(OPENMP_LIB)
+    message("-- OpenMP FOUND")
+else()
+    message("-- OpenMP NOT FOUND")
+endif()
+
 #-------------------------------------------------------------------------------
 # Directory setup
 #-------------------------------------------------------------------------------
