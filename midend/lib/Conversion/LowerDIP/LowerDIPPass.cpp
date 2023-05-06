@@ -112,7 +112,8 @@ public:
     // Register operand values.
     Value input = op->getOperand(0);
     Value angleVal = op->getOperand(1);
-    Value output = op->getOperand(2);
+    Value scale = op->getOperand(2);
+    Value output = op->getOperand(3);
 
     auto inElemTy = input.getType().cast<MemRefType>().getElementType();
     dip::DIP_ERROR error =
@@ -169,7 +170,7 @@ public:
     Value centerXF32 = indexToF32(rewriter, loc, centerX);
     Value centerYF32 = indexToF32(rewriter, loc, centerY);
 
-    auto affineMatrix = dip::getRotationMatrix(rewriter, loc, centerXF32, centerYF32, angleVal, c1F32);
+    auto affineMatrix = dip::getRotationMatrix(rewriter, loc, centerXF32, centerYF32, angleVal, scale);
 
     Value deltaXI = rewriter.create<arith::SubIOp>(loc, outputCol, inputCol);
     Value deltaYI = rewriter.create<arith::SubIOp>(loc, outputRow, inputRow);

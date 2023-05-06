@@ -40,7 +40,7 @@ bool testImplementation(int argc, char *argv[]) {
 
   // Define memref containers.
   Img<float, 2> input(image);
-  MemRef<float, 2> output = dip::Rotate2D(&input, 45, dip::ANGLE_TYPE::DEGREE);
+  MemRef<float, 2> output = dip::Rotate2D(&input, 50, 0.68, dip::ANGLE_TYPE::DEGREE);
 
   // Define a cv::Mat with the output of Rotate2D.
   Mat outputImageRotate2D(output.getSizes()[0], output.getSizes()[1], CV_32FC1,

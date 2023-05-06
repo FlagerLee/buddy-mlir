@@ -54,7 +54,7 @@ void _mlir_ciface_corr_2d_replicate_padding(
     unsigned int centerX, unsigned int centerY, float constantValue);
 
 // Declare the Rotate2D C interface.
-void _mlir_ciface_rotate_2d(Img<float, 2> *input, float angleValue,
+void _mlir_ciface_rotate_2d(Img<float, 2> *input, float angleValue, float scale,
                             MemRef<float, 2> *output);
 
 // Declare the Resize2D C interface.
@@ -192,8 +192,13 @@ inline void Corr2D(Img<float, 2> *input, MemRef<float, 2> *kernel,
 }
 
 // User interface for 2D Rotation.
-inline MemRef<float, 2> Rotate2D(Img<float, 2> *input, float angle,
+inline MemRef<float, 2> Rotate2D(Img<float, 2> *input, float angle, float scale,
                                  ANGLE_TYPE angleType) {
+  if (scale == 0) {
+    throw std::invalid_argument(
+        "Please enter non-zero values of scaling ratios.\n");
+  }
+
   float angleRad;
 
   if (angleType == ANGLE_TYPE::DEGREE)
@@ -204,17 +209,17 @@ inline MemRef<float, 2> Rotate2D(Img<float, 2> *input, float angle,
   float sinAngle = std::sin(angleRad);
   float cosAngle = std::cos(angleRad);
 
-  int outputRows = std::round(std::abs(input->getSizes()[0] * cosAngle) +
-                              std::abs(input->getSizes()[1] * sinAngle)) +
+  int outputRows = std::round(std::abs(input->getSizes()[0] * scale * cosAngle) +
+                              std::abs(input->getSizes()[1] * scale * sinAngle)) +
                    1;
-  int outputCols = std::round(std::abs(input->getSizes()[1] * cosAngle) +
-                              std::abs(input->getSizes()[0] * sinAngle)) +
+  int outputCols = std::round(std::abs(input->getSizes()[1] * scale * cosAngle) +
+                              std::abs(input->getSizes()[0] * scale * sinAngle)) +
                    1;
 
   intptr_t sizesOutput[2] = {outputRows, outputCols};
   MemRef<float, 2> output(sizesOutput);
 
-  detail::_mlir_ciface_rotate_2d(input, angleRad, &output);
+  detail::_mlir_ciface_rotate_2d(input, angleRad, scale, &output);
 
   return output;
 }

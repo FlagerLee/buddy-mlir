@@ -56,8 +56,6 @@ else()
             COMMAND rm ${CMAKE_CURRENT_BINARY_DIR}/DIP.bc)
 endif()
 
-message("${lower_cmds}")
-
 add_custom_command(OUTPUT DIP.o
         POST_BUILD
         COMMAND ${lower_cmds}

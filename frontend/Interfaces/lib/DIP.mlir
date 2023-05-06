@@ -30,9 +30,9 @@ func.func @corr_2d_replicate_padding(%inputImage : memref<?x?xf32>, %kernel : me
   return
 }
 
-func.func @rotate_2d(%inputImage : memref<?x?xf32>, %angle : f32, %outputImage : memref<?x?xf32>) attributes{llvm.emit_c_interface}
+func.func @rotate_2d(%inputImage : memref<?x?xf32>, %angle : f32, %scale : f32, %outputImage : memref<?x?xf32>) attributes{llvm.emit_c_interface}
 {
-  dip.rotate_2d %inputImage, %angle, %outputImage : memref<?x?xf32>, f32, memref<?x?xf32>
+  dip.rotate_2d %inputImage, %angle, %scale, %outputImage : memref<?x?xf32>, f32, f32, memref<?x?xf32>
   return
 }
 
@@ -47,6 +47,8 @@ func.func @resize_2d_bilinear_interpolation(%inputImage : memref<?x?xf32>, %hori
   dip.resize_2d BILINEAR_INTERPOLATION %inputImage, %horizontal_scaling_factor, %vertical_scaling_factor, %outputImage : memref<?x?xf32>, f32, f32, memref<?x?xf32>
   return
 }
+
+func.func @resize_2d(..)
 
 func.func @erosion_2d_constant_padding(%inputImage : memref<?x?xf32>, %kernel : memref<?x?xf32>, %outputImage : memref<?x?xf32>, %copymemref : memref<?x?xf32>, %centerX : index, %centerY : index, %iterations : index, %constantValue: f32) attributes{llvm.emit_c_interface}
 {

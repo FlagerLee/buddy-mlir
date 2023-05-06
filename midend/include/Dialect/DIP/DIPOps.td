@@ -113,18 +113,19 @@ def DIP_Rotate2DOp : DIP_Op<"rotate_2d"> {
   For example:
 
   ```mlir
-  dip.rotate_2d %inputImage, %angle, %outputImage : memref<?x?xf32>, f32, memref<?x?xf32>
+  dip.rotate_2d %inputImage, %angle, %scale, %outputImage : memref<?x?xf32>, f32, f32, memref<?x?xf32>
   ```
 }];
 
   let arguments = (ins Arg<AnyRankedOrUnrankedMemRef, "inputMemref",
                            [MemRead]>:$memrefI,
                        F32 : $angle,
+                       F32 : $scale,
                        Arg<AnyRankedOrUnrankedMemRef, "outputMemref",
                            [MemRead]>:$memrefO);
 
   let assemblyFormat = [{
-    $memrefI `,` $angle `,` $memrefO attr-dict `:` type($memrefI) `,` type($angle) `,` type($memrefO)
+    $memrefI `,` $angle `,` $scale `,` $memrefO attr-dict `:` type($memrefI) `,` type($angle) `,` type($scale) `,` type($memrefO)
   }];
 }
 
